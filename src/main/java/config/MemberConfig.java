@@ -49,8 +49,8 @@ public class MemberConfig {
 		}
 		//dataSource.setJdbcUrl("jdbc:mysql://localhost:3306/kit");
 		dataSource.setJdbcUrl("jdbc:mysql://152.70.252.20:3308/recycling?characterEncoding=UTF-8");
-		dataSource.setUser("admin");
-		dataSource.setPassword("admin");
+		dataSource.setUser("");
+		dataSource.setPassword("");
 		return dataSource;
 		
 		}
