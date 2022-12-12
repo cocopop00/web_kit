@@ -1,0 +1,519 @@
+-- 회원
+
+drop table member;
+create table member(   
+	email	   varchar(40)  primary key,
+    pwd        varchar(20),     
+    name       varchar(40),
+    zip_num    varchar(7),
+    address    varchar(100),
+    phone      varchar(20),
+	point	   int(10),
+    useyn      char(1)    default 'y',
+	level	   varchar(10),
+    indate     TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+
+-- 상품
+drop table product;
+create table product(
+    prod_cd      int(5)     primary key auto_increment,
+	item_num     int(5),
+    item_name    varchar(100),
+	regularprice int(7)	  default '0',
+	saleprice	 int(7)   default '0',
+	content		 varchar(1000),
+	useyn        char(1)       	 default 'y',
+	bestyn	     char(1)		 default 'n',
+	newyn        char(1)       	 default 'n',
+	kind         char(1),
+	company_name varchar(100),
+	distri_code	 varchar(100),
+	event_kind char(1) default '0',
+	salerate int(5) 	default  0,
+	indate     TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+
+-- 장바구니
+drop table cart;
+create table cart(
+  cart_cd      int(10)    		primary key auto_increment,  -- 장바구니번호
+  email        varchar(40)   	references member(email),  -- 주문자 아이디(FK :　member.id) 
+  prod_cd      int(5)    		references product(prod_cd), -- 주문 상품번호(FK :product.pseq) 
+  quantity     int(5)     		default 1,        -- 주문 수량
+  result       char(1)       	default '1',      -- 1:미처리 2:처리
+  indate       TIMESTAMP DEFAULT CURRENT_TIMESTAMP   -- 주문일
+);
+
+
+-- 주문(order)
+
+drop table orders;
+create table orders(
+  ord_cd      int(10)  			primary key auto_increment,           	-- 주문번호  
+  email       varchar(40)   	references member(email), 				-- 주문자 아이디
+  indate      TIMESTAMP DEFAULT CURRENT_TIMESTAMP      			-- 주문일
+);
+
+
+-- 주문상세(orderDetail)
+
+drop table order_detail;
+create table order_detail(
+  ordd_cd       int(10)   primary key auto_increment,        -- 주문상세번호
+  ord_cd        int(10)   references orders(ord_cd),   		   -- 주문번호  
+  prod_cd       int(5)    references product(prod_cd),  		   -- 상품번호
+  quantity    	int(5)    	default 1,                         -- 주문수량
+  result      	char(1)      default '1',                     -- 1: 미처리 2: 처리     
+  address	  	varchar(100),
+  phone	  	  	varchar(20)
+);
+
+
+/*
+-- 찜리스트(save)
+drop table item_save;
+create table item_save(
+  save_cd         int(10)    	primary key auto_increment,  -- 장바구니번호
+  email        varchar(40)   	references member(email),
+  prod_cd         int(5)    	references product(prod_cd), -- 주문 상품번호(FK :product.pseq) 
+  quantity     int(5)     		default 1,        -- 주문 수량
+  result       char(1)       	default '1',      -- 1:미처리 2:처리
+  indate       TIMESTAMP DEFAULT CURRENT_TIMESTAMP   -- 주문일
+);
+*/
+
+
+-- 찜리스트(wish)
+
+drop table wish;
+create table wish(
+  wish_cd         int(10)    	primary key auto_increment,  -- 장바구니번호
+  email        varchar(40)   	references member(email),
+  prod_cd         int(5)    	references product(prod_cd), -- 주문 상품번호(FK :product.pseq) 
+  quantity     int(5)     		default 1,        -- 주문 수량
+  result       char(1)       	default '1',      -- 1:미처리 2:처리
+  indate       TIMESTAMP DEFAULT CURRENT_TIMESTAMP   -- 주문일
+);
+
+
+
+-- 제품문의
+drop table product_qna;
+create table product_qna(
+  prod_cd			int(10)	references product(prod_cd),
+  prodq_cd			int(10) primary key auto_increment,
+  subject		varchar(300),
+  content		varchar(1000),
+  reply			varchar(1000),
+  email			varchar(40),
+  name			varchar(40),
+  pwd			varchar(20),
+  secret			char(1) default 'n',		
+  rep			char(1) default '1',
+  indate		TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+
+-- 질문
+drop table QNA;
+CREATE TABLE QNA(
+	qna_cd		INT(5)		 primary key auto_increment,
+	category	varchar(100),     -- 추가됨
+	subject		VARCHAR(300),
+	content		VARCHAR(1000),
+	reply		VARCHAR(1000),
+	email		VARCHAR(40),
+	rep		VARCHAR(1)	default	'1',
+	indate		TIMESTAMP	 DEFAULT CURRENT_TIMESTAMP,
+	image1		varchar(50)  default 'default.jpg',
+	image2		varchar(50)  default 'default.jpg',
+	image3		varchar(50)  default 'default.jpg'
+);
+
+-- 상품리뷰
+drop table review;
+CREATE TABLE review(
+	prod_cd		INT(5),		
+	item_name	VARCHAR(100),
+	review_cd		INT(5)  primary key auto_increment,
+	email		VARCHAR(40),
+	subject		VARCHAR(300),
+	content		VARCHAR(1000),
+	indate		TIMESTAMP	 DEFAULT CURRENT_TIMESTAMP,
+	recom_num	INT(5),
+	useyn		INT(1)		default	'1'
+);
+
+
+-- 관리자
+drop table worker;
+CREATE TABLE worker(
+	email		varchar(40),
+	pwd			VARCHAR(20),
+	name		VARCHAR(40),
+	phone		VARCHAR(20)
+);
+
+
+-- 이벤트
+drop table EVENT;
+CREATE TABLE EVENT(
+	event_cd	INT(5) primary key auto_increment,
+	subject		VARCHAR(300),
+	content		VARCHAR(1000),
+	recom_num	INT(5),
+	eventyn     char(1)    default 'y',
+	start_dt	VARCHAR(20),
+	end_dt		VARCHAR(20),
+	indate		TIMESTAMP	 DEFAULT CURRENT_TIMESTAMP
+);
+
+
+-- 공지사항
+drop table NOTICE;
+CREATE TABLE NOTICE(
+	noti_cd		INT(5) primary key auto_increment,
+	subject		VARCHAR(300),
+	content		VARCHAR(1000),
+	indate		TIMESTAMP	 DEFAULT CURRENT_TIMESTAMP,
+	name		VARCHAR(40),
+	views		INT(5)
+);
+
+
+
+-- 제품 이미지
+
+drop table p_image;
+CREATE TABLE p_image(
+	pimage_cd	int(5) primary key auto_increment,
+	prod_cd		int(5) references product(prod_cd),
+	image_num	int(5),
+	image		varchar(50)  default 'default.jpg'
+);
+
+
+-- 이벤트 이미지
+
+drop table e_image;
+CREATE TABLE e_image(
+	eimage_cd	int(5) primary key auto_increment,
+	event_cd	int(5) references EVENT(event_cd),
+	image_num	int(5),
+	linkyn		char(1) default 'n',
+	image		varchar(50)  default 'default.jpg'
+);
+
+-- 리뷰 이미지
+
+drop table r_image;
+CREATE TABLE r_image(
+	rimage_cd	int(5) primary key auto_increment,
+	review_cd	int(5) references review(review_cd),
+	image_num	int(5),
+	image		varchar(50)  default 'default.jpg'
+);
+
+
+-- 공지사항 이미지
+
+drop table n_image;
+CREATE TABLE n_image(
+	nimage_cd	int(5) primary key auto_increment,
+	noti_cd		int(5) references NOTICE(noti_cd),
+	image_num	int(5) default '0',
+	image		varchar(50)  default 'default.jpg'
+);
+
+
+-- view 
+
+
+-- 공지사항 뷰
+drop view notice_view;
+create or replace view notice_view
+as 
+select n.noti_cd, n.subject, n.content, n.indate, n.name,
+n.views, ni.nimage_cd, ni.image
+from n_image ni, NOTICE n
+where n.noti_cd = ni.noti_cd;
+
+
+-- 리뷰 뷰
+drop view review_view;
+create or replace view review_view
+as 
+select r.prod_cd, r.item_name, r.review_cd, r.email, r.subject, r.content,
+r.indate, r.recom_num, r.useyn, ri.rimage_cd, ri.image
+from r_image ri, review r
+where r.review_cd = ri.review_cd;
+
+
+-- 이벤트 뷰
+drop view event_view;
+create or replace view event_view
+as 
+select e.event_cd, e.subject, e.content, e.recom_num, e.eventyn,e.start_dt,e.end_dt, 
+e.indate, ei.eimage_cd ,linkyn,ei.image_num, ei.image
+from e_image ei, EVENT e
+where e.event_cd = ei.event_cd;
+
+
+-- 제품뷰
+drop view product_view;
+create or replace view product_view
+as
+select p.prod_cd, p.item_num, p.item_name, p.regularprice, p.saleprice,
+p.content, p.kind, p.useyn, p.bestyn, p.newyn, p.company_name,
+p.distri_code,p.indate,pi.pimage_cd,p.salerate, p.event_kind,pi.image_num,pi.image
+from p_image pi, product p 
+where p.prod_cd=pi.prod_cd;
+
+
+-- 오더뷰
+
+
+-- orders, order_detail, member, product  데이터근거로 order view 생성혹은 갱신
+
+drop view order_view;
+create or replace view order_view
+as
+select d.ordd_cd, o.ord_cd, o.email, o.indate, d.prod_cd, d.quantity, m.name,
+m.zip_num, m.address, m.phone, p.item_name, p.saleprice, d.result   
+from orders o, order_detail d, member m, product p 
+where o.ord_cd=d.ord_cd and o.email = m.email and d.prod_cd = p.prod_cd;
+
+
+-- 카트_view
+drop view cart_view;
+create or replace view cart_view
+as
+select o.cart_cd, o.email, o.prod_cd, m.name, p.item_name, 
+o.quantity, o.indate, p.saleprice, o.result ,pi.image_num, pi.image  
+from cart o, member m, product p, p_image pi 
+where o.email = m.email and o.prod_cd = p.prod_cd and p.prod_cd = pi.prod_cd and pi.image_num=1
+and result='1';
+
+
+/* drop view cart_view;
+create or replace view cart_view
+as
+select o.cart_cd, o.email, o.prod_cd, m.name, p.item_name, 
+o.quantity, o.indate, p.saleprice, o.result  
+from cart o, member m, product p 
+where o.email = m.email and o.prod_cd = p.prod_cd
+and result='1'; */
+
+
+/*// 뷰 없이 찾고 싶을때 사용.
+SELECT subject,content,recom_num,in_date,eimage_cd,image 
+FROM event a, e_image b 
+where a.event_cd=b.event_cd
+and a.event_cd='1'; */
+
+
+-- // 사진, 제품이름, 금액, 수량
+
+-- 찜리스트 뷰(wish_view)
+-- drop view wish_view;
+create or replace view wish_view
+as
+select w.wish_cd, w.email, w.prod_cd, w.quantity, w.result, w.indate,
+p.item_name, pi.image_num, pi.image
+from wish w, product p, p_image pi 
+where w.prod_cd = p.prod_cd and p.prod_cd = pi.prod_cd and pi.image_num=1
+and result='1';
+
+
+
+-- 데이터
+
+-- notice 테이블
+insert into kit.notice(subject, content,indate,name,views) value('상품', '안녕하세요 상품은 밀키트로 제작되었습니다. 많은 관심부탁드립니다.',now(),'밀키트',1);
+insert into kit.notice(subject, content,indate,name,views) value('배송', '안녕하세요 상품배송은 냉동식품이라서 보냉처리된 포장을 원칙으로 하여 배송을 진행하고있습니다.',now(),'밀키트',1);
+
+
+-- n_image 테이블
+insert into kit.n_image(noti_cd, image_num,image) value (1,1,'1.jpg');
+insert into kit.n_image(noti_cd, image_num,image) value (1,2,'2.jpg');
+insert into kit.n_image(noti_cd, image_num,image) value (1,2,'menu.jpg');
+
+
+-- Qna 테이불
+insert into kit.qna(category, subject, content, reply, email, rep, indate) value('배송문의', '배송언제되나요', '주문을 한지가 일주일지났는데 왜 발송이 늦죠?', '최송합니다. 상품 하자로 인해 배송이 늦었습니다. 오늘발송됩니다.', 'test1@test.com', '2', now());
+insert into kit.qna(category, subject, content, email, rep, indate) value('상품문의', '상품이이상해요', '주문한 상품과 배송된 상품이 조금 달라요?', 'test1@test.com', '1', now());
+
+
+
+
+-- MEMBER (회원)
+INSERT INTO member VALUES ('test1@test.com','1111','홍길동','111-111','의정부시','010-0000-0000',1000,'y','일반','2022-08-08 02:17:56');
+
+
+
+-- 이벤트 테이블
+
+INSERT INTO event VALUES 
+(1,'[KITx벼꽃향미] 한식대첩 십리향 쌀 증정 이벤트','여름이다',54,'n','2022-06-07','2022-06-16','2022-08-04 06:18:49'),
+(2,'[KITx최요비]최요비 밀키트 신제품 기대평 이벤트','여름이다',40,'n','2022-06-10','2022-06-19','2022-08-04 06:18:55'),
+(3,'[KIT]8월 VIP SPECAL GIFT','여름이다',12,'y','2022-08-01','2022-08-30','2022-08-04 06:19:00'),
+(4,'[KITx빨간내복코야코]신제품 출시 기념 이벤트','여름이다',1,'y','2022-08-01','2022-08-23','2022-08-04 06:19:05'),
+(5,'[KIT]여름방학 쇼핑','여름이다',2,'y','2022-08-01','2022-08-22','2022-08-04 06:19:10'),
+(6,'[KIT]홈캉스 기획전','여름이다',2,'y','2022-08-15','2022-08-22','2022-08-04 06:19:12');
+
+
+
+/*insert into kit.event(subject,content,recom_num,eventyn,start_dt,end_dt,indate) 
+values("[KITx벼꽃향미] 한식대첩 십리향 쌀 증정 이벤트","여름이다",54,'n','2022-06-07','2022-06-16',now())
+insert into kit.event(subject,content,recom_num,eventyn,start_dt,end_dt,indate) 
+values("[KITx최요비]최요비 밀키트 신제품 기대평 이벤트","여름이다",40,'n','2022-06-10','2022-06-19',now())
+insert into kit.event(subject,content,recom_num,eventyn,start_dt,end_dt,indate) 
+values("[KIT]8월 VIP SPECAL GIFT","여름이다",12,'y','2022-08-01','2022-08-30',now())
+insert into kit.event(subject,content,recom_num,eventyn,start_dt,end_dt,indate) 
+values("[KITx빨간내복코야코]신제품 출시 기념 이벤트","여름이다",1,'y','2022-08-01','2022-08-23',now())
+insert into kit.event(subject,content,recom_num,eventyn,start_dt,end_dt,indate) 
+values("[KIT]여름방학 쇼핑","여름이다",2,'y','2022-08-01','2022-08-22',now())
+insert into kit.event(subject,content,recom_num,eventyn,start_dt,end_dt,indate) 
+values("[KIT]홈캉스 기획전","여름이다",2,'y','2022-08-15','2022-08-22',now())*/
+
+
+-- 이벤트 이미지
+INSERT INTO e_image VALUES 
+(1,1,1,'n','gm-1.jpg'),
+(2,2,1,'n','nm-1.jpg'),
+(3,3,1,'n','mm-1.jpg'),
+(4,4,1,'n','nm-2.jpg'),
+(5,5,1,'n','sm-1.jpg'),
+(6,6,1,'n','sm-2.jpg'),
+(7,6,2,'n','sm-1-1.jpg'),
+(8,6,3,'y','sm-1-2.jpg'),
+(9,6,4,'n','sm-1-3.jpg'),
+(10,3,2,'n','mm-1-1.jpg'),
+(11,1,2,'y','gm-1-1.jpg'),
+(12,2,2,'y','nm-1-1.jpg'),
+(13,4,2,'y','nm-2-1.jpg'),
+(14,5,2,'n','sm-2-1.jpg'),
+(15,5,3,'y','sm-2-2.jpg'),
+(16,5,4,'n','sm-2-3.jpg'),
+(17,5,5,'n','sm-2-4.jpg');
+
+
+/*insert into kit.e_image(event_cd,image_num,image)values(1,1,"gm-1");
+insert into kit.e_image(event_cd,image_num,linkyn,image)values(2,1,"nm-1");
+insert into kit.e_image(event_cd,image_num,linkyn,image)values(3,1,"mm-1");
+insert into kit.e_image(event_cd,image_num,linkyn,image)values(4,1,"nm-2");
+insert into kit.e_image(event_cd,image_num,linkyn,image)values(5,1,"sm-1");
+insert into kit.e_image(event_cd,image_num,linkyn,image)values(6,1,"sm-2");*/
+
+
+
+-- 제품 
+
+INSERT INTO kit.product VALUES 
+(1,50,'[KITX라이프멘터리] 준식이 쉬림프 빠에야(3인)',13000,17900,'유튜버 준식님의 레시피로 만든 캠핑 요리입니다.','y','y','n','2','마이셰프','A1-1','0',0,'2022-08-04 05:59:39'),
+(2,45,'[KIT] 하우스비프스테이크(2인)',11000,14900,'수제소스를 곁들인 고급스러운 스테이크입니다.','y','y','n','2','마이셰프','A1-2','6',0,'2022-08-04 06:01:56'),
+(3,45,'[KIT]감바스알아히요(2인)',13000,17900,'통통한 새우와 올리브오일에 찍어 먹는 색다른 맛의 스페인 까수엘라 매력에 푹 빠지실 거예요','y','y','n','2','마이셰프','A1-3','0',0,'2022-08-08 03:44:53'),
+(4,40,'[KIT]밀푀유나베(2인)',12000,16900,'깔끔한 국물이 일품, 부드러운 소고기와 신선한 야채가 잘 어우러진 전골요리입니다.','y','y','n','4','마이셰프','A1-4','6',0,'2022-08-08 03:45:07'),
+(5,40,'[KIT]궁중 소고기 버섯잡채(2인)',7000,10900,'소고기에 풍부한 감칠맛과 간장 양념의 깊은 잡채요리','y','n','n','1','마이셰프','A1-5','0',0,'2022-08-08 03:45:07'),
+(6,40,'[KIT]한우소고기무국(2인)',6000,9900,'국산 한우1+ 소고기로 만든 국물까지 깔끔한 소고기무국입니다.','y','n','n','1','마이셰프','A1-1','0',0,'2022-08-08 03:45:07'),
+(7,40,'[KIT]양장피(2인)',10000,13900,'싱싱한 야채에 맛있는 셰프의 소스까지 중화요리집이 부럽지 않은 맛있는 메뉴입니다.','y','n','n','3','마이셰프','A1-4','6',0,'2022-08-08 03:45:07'),
+(8,40,'[KIT]뜨끈한 쌀국수(1인)',7000,10900,'깔끔한 국물이 일품, 현지에서 먹는 그맛 쌀국수','y','n','n','5','마이셰프','A1-5','0',0,'2022-08-08 03:45:07'),
+(9,40,'[KIT]모듬닭쌈 찜 샐러드',6000,9900,'퍽퍽하지 않고 부드러운 닭가슴살에 신선한 야채가 어우러진 샐러드','y','n','n','6','마이셰프','A1-4','0',0,'2022-08-08 03:45:07'),
+(10,40,'[KIT]일품 소고기 고추잡채 꽃빵(2인)',9000,11900,'느끼하지 않고 깔끔한 고급스런 고추잡채입니다.','y','n','n','3','마이셰프','A1-4','0',0,'2022-08-08 03:45:07'),
+(11,40,'[KIT]한우소고기미역국(2인)',6000,8900,'최고급 산모용 청정미역으로 맛을 낸 한우미역국입니다.','y','n','n','1','마이셰프','A1-4','0',0,'2022-08-08 03:45:07'),
+(12,40,'[KITx빨간내복야코] 빨간내복야코 한입만 찹소떡(2인)',11000,15900,'온가족이 맛있게 즐길 수 있는 케찹범벅!','y','n','y','1','마이셰프','A1-4','0',0,'2022-08-08 03:45:07'),
+(13,40,'[KITx빨간내복야코] 빨간내복야코 점보 닭다리 볶음밥(1인)',9000,12900,'부드러운 닭다리살 케찹범벅!','y','n','y','1','마이셰프','A1-4','0',0,'2022-08-08 03:45:07');
+
+
+
+-- 제품 이미지
+INSERT INTO p_image VALUES 
+(1,1,1,'wm-1-1.jpg'),
+(2,1,2,'wm-1-2.jpg'),
+(3,1,3,'ws-1-2.jpg'),
+(4,1,4,'ws-1-3.jpg'),
+(5,1,5,'ws-1-4.jpg'),
+(6,1,6,'ws-1-5.jpg'),
+(7,1,7,'ws-1-6.jpg'),
+(8,2,1,'wm-2-1.jpg'),
+(9,2,2,'wm-2-2.jpg'),
+(10,2,3,'ws-2-1.jpg'),
+(11,2,4,'ws-2-2.jpg'),
+(12,2,5,'ws-2-3.jpg'),
+(13,3,1,'wm-3-1.jpg'),
+(14,3,2,'wm-3-2.jpg'),
+(15,3,3,'ws-3-1.jpg'),
+(16,3,4,'ws-3-2.jpg'),
+(17,3,5,'ws-3-3.jpg'),
+(18,4,1,'wm-4-1.jpg'),
+(19,4,2,'wm-4-2.jpg'),
+(20,4,3,'ws-4-1.jpg'),
+(21,4,4,'ws-4-2.jpg'),
+(22,4,5,'ws-4-3.jpg');
+
+-- insert into p_image(prod_cd,image_num,image) values
+insert into kit.p_image(prod_cd,image_num,image) values
+(5,1,'wm-5-1.jpg'),
+(5,2,'wm-5-2.jpg'),
+(5,3,'ws-5-1.jpg'),
+(5,4,'ws-5-2.jpg'),
+(5,5,'ws-5-3.jpg'),
+(5,6,'ws-5-4.jpg'),
+(6,1,'wm-6-1.jpg'),
+(6,2,'wm-6-2.jpg'),
+(6,3,'ws-6-1.jpg'),
+(6,4,'ws-6-2.jpg'),
+(6,5,'ws-6-3.jpg'),
+(6,6,'ws-6-4.jpg'),
+(6,7,'ws-6-5.jpg'),
+(7,1,'wm-7-1.jpg'),
+(7,2,'wm-7-2.jpg'),
+(7,3,'ws-7-1.jpg'),
+(7,4,'ws-7-2.jpg'),
+(7,5,'ws-7-3.jpg'),
+(7,5,'ws-7-4.jpg'),
+(7,5,'ws-7-5.jpg'),
+(8,1,'wm-8-1.jpg'),
+(8,2,'wm-8-2.jpg'),
+(8,3,'ws-8-1.jpg'),
+(8,4,'ws-8-2.jpg'),
+(8,5,'ws-8-3.jpg'),
+(8,6,'ws-8-4.jpg'),
+(8,7,'ws-8-5.jpg'),
+(9,1,'wm-9-1.jpg'),
+(9,2,'wm-9-2.jpg'),
+(9,3,'ws-9-1.jpg'),
+(9,4,'ws-9-2.jpg'),
+(9,5,'ws-9-3.jpg'),
+(9,6,'ws-9-4.jpg'),
+(9,7,'ws-9-5.jpg'),
+(9,8,'ws-9-6.jpg'),
+(10,1,'wm-10-1.jpg'),
+(10,2,'wm-10-2.jpg'),
+(10,3,'ws-10-1.jpg'),
+(10,4,'ws-10-2.jpg'),
+(10,5,'ws-10-3.jpg'),
+(10,6,'ws-10-4.jpg'),
+(10,7,'ws-10-5.jpg'),
+(11,1,'wm-11-1.jpg'),
+(11,2,'wm-11-2.jpg'),
+(11,3,'ws-11-1.jpg'),
+(11,4,'ws-11-2.jpg'),
+(11,5,'ws-11-3.jpg'),
+(11,6,'ws-11-4.jpg'),
+(11,7,'ws-11-5.jpg'),
+(12,1,'wm-12-1.jpg'),
+(12,2,'wm-12-2.jpg'),
+(12,3,'ws-12-1.jpg'),
+(12,4,'ws-12-2.jpg'),
+(12,5,'ws-12-3.jpg'),
+(12,6,'ws-12-4.jpg'),
+(13,1,'wm-13-1.jpg'),
+(13,2,'wm-13-2.jpg'),
+(13,3,'ws-13-1.jpg'),
+(13,4,'ws-13-2.jpg'),
+(13,5,'ws-13-3.jpg'),
+(13,6,'ws-13-4.jpg');

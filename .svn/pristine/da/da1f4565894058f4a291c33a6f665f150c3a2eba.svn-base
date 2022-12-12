@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dao.ProductDao">
+  <resultMap type="product" id="memberResultMap">
+    <result column="prod_cd"	property="prod_cd"/>
+    <result column="item_num"    property="item_num"/>
+    <result column="item_name"    property="item_name"/>
+    <result column="regularprice"      property="regularprice"/>
+    <result column="saleprice"      property="saleprice"/>
+    <result column="content"      property="content"/>
+    <result column="kind"      property="kind"/>
+    <result column="useyn"      property="useyn"/>
+    <result column="bestyn"      property="bestyn"/>
+    <result column="newyn"      property="newyn"/>
+    <result column="company_name"      property="company_name"/>
+    <result column="distri_code"      property="distri_code"/> 
+    <result column="indate" property="indate" javaType="java.sql.Timestamp"/>
+    <result column="pimage_cd"      property="pimage_cd"/> 
+    <result column="image_num"      property="image_num"/> 
+    <result column="image"      property="image"/> 
+  </resultMap>  
+  
+  <select id="selectcount" parameterType="int" resultType="int">
+  	SELECT count(*) FROM kit.product where kind=#{value};
+  </select>
+  
+    <select id="selectyncount" parameterType="hashmap" resultType="int">
+ 	SELECT count(*) FROM kit.product where bestyn=#{best} and newyn=#{news}; 
+  </select>		
+  
+    <select id="selecteventcount" parameterType="int" resultType="int">
+  	SELECT count(*) FROM kit.product where event_kind=#{value};
+  </select>
+  
+  
+  
+  <select id="selectkind" parameterType="hashmap" resultMap="memberResultMap">
+  <!-- SELECT * FROM kit.product_view where image_num=1 and kind=#{value} -->
+     SELECT *
+	FROM
+	(
+	  SELECT 
+	      @rownum:=@rownum+1  rnum, 
+	      A.* 
+	  FROM 
+	      (SELECT * FROM kit.product_view where image_num=1 and kind=#{kind} ORDER BY prod_cd DESC) A, 
+	      (SELECT @ROWNUM := 0) R
+	  WHERE 
+	      1=1  
+	) list 
+	WHERE <![CDATA[ rnum >= #{page} AND rnum <=#{page}+11  ]]>
+  </select>
+
+  <select id="selectyn" parameterType="hashmap" resultMap="memberResultMap">
+  	<!-- SELECT * FROM kit.product_view where image_num=1 and bestyn=#{best} and newyn=#{news};  -->
+    SELECT *
+	FROM
+	(
+	  SELECT 
+	      @rownum:=@rownum+1  rnum, 
+	      A.* 
+	  FROM 
+	      (SELECT * FROM kit.product_view where image_num=1 and bestyn=#{best} and newyn=#{news}) A, 
+	      (SELECT @ROWNUM := 0) R
+	  WHERE 
+	      1=1  
+	) list 
+	WHERE <![CDATA[ rnum >= #{page} AND rnum <=#{page}+11  ]]>  	
+  </select>  
+  
+  
+  
+  
+  
+  
+  
+  <select id="selectnewlist" resultMap="memberResultMap">
+     SELECT *
+	FROM
+	(
+	  SELECT 
+	      @rownum:=@rownum+1  rnum, 
+	      A.* 
+	  FROM 
+	      (SELECT * FROM kit.product_view where newyn='y' and bestyn='n' and image_num=1 order by indate Desc) A, 
+	      (SELECT @ROWNUM := 0) R
+	  WHERE 
+	      1=1  
+	) list 
+	WHERE <![CDATA[ rnum >= 1 AND rnum <= 4  ]]>  	
+  </select>
+  
+  <select id="selectbestlist" resultMap="memberResultMap">
+      SELECT *
+	FROM
+	(
+	  SELECT 
+	      @rownum:=@rownum+1  rnum, 
+	      A.* 
+	  FROM 
+	      (SELECT * FROM kit.product_view where newyn='n' and bestyn='y' and image_num=1) A, 
+	      (SELECT @ROWNUM := 0) R
+	  WHERE 
+	      1=1  
+	) list 
+	WHERE <![CDATA[ rnum >= 1 AND rnum <= 4  ]]>  
+  </select>
+  
+<!--   <select id="selectlist" parameterType="map" resultMap="memberResultMap">
+   SELECT * FROM kit.product_view where image_num=1
+  </select> -->
+ 
+  <select id="selectitem" parameterType="int" resultMap="memberResultMap">
+  SELECT * FROM kit.product_view where not image_num=1 and prod_cd=#{value}
+  </select>
+ 
+  <select id="selectevent" parameterType="hashmap" resultMap="memberResultMap">
+    SELECT *
+	FROM
+	(
+	  SELECT 
+	      @rownum:=@rownum+1  rnum, 
+	      A.* 
+	  FROM 
+	      (SELECT * FROM kit.product_view where image_num=1 and event_kind=#{eventcd} ORDER BY prod_cd DESC) A, 
+	      (SELECT @ROWNUM := 0) R
+	  WHERE 
+	      1=1  
+	) list 
+	WHERE <![CDATA[ rnum >= #{page} AND rnum <=#{page}+11  ]]>
+  </select>
+ 
+  
+</mapper>

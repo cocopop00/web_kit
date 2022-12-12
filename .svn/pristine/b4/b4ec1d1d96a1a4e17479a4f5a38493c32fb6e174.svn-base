@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dao.OrderListDao">
+	<resultMap type="OrderList" id="memberResultMap">
+		<result column="ordd_cd" property="ordd_cd" />
+		<result column="ord_cd" property="ord_cd" />
+		<result column="prod_cd" property="prod_cd" />
+		<result column="quantity" property="quantity" />
+		<result column="saleprice" property="saleprice" />
+		<result column="email" property="email" />
+		<result column="name" property="name" />
+		<result column="zip_num" property="zip_num" />
+		<result column="address" property="address" />
+		<result column="phone" property="phone" />
+		<result column="item_name" property="item_name" />
+		<result column="result" property="result" />
+		<result column="indate" property="indate"
+			javaType="java.sql.Timestamp" />
+	</resultMap>
+
+	<select id="selectOrder" parameterType="map"
+		resultMap="memberResultMap">
+		SELECT * FROM ORDER_VIEW where email = #{email} AND ord_cd =
+		#{maxOseq}
+	</select>
+
+	<insert id="insertOrder" parameterType="String">
+		INSERT INTO ORDERS(email)
+		VALUES(#{value})
+	</insert>
+	
+	<insert id="insertOrder2" parameterType="String">
+		INSERT INTO ORDERS(email)
+		VALUES(#{value})
+	</insert>
+	
+	<insert id="insertOrderDetail2" parameterType="hashmap">
+		insert into
+		order_detail(ord_cd,prod_cd,quantity)
+		values(#{maxOrdcd},#{Prodcd},"1")
+	</insert>
+
+	<select id="selectMaxOrdcd" resultType="int">
+		select max(ord_cd) from orders
+	</select>
+
+	<insert id="insertOrderDetail" parameterType="hashmap">
+		insert into
+		order_detail(ord_cd,prod_cd,quantity)
+		values(#{maxOrdcd},#{Prodcd},#{Quantity})
+	</insert>
+
+	<update id="updateCartResult" parameterType="int">
+		update cart set result=2 where cart_cd=(#{value})
+	</update>
+
+	<select id="listOrderByEmail" resultMap="memberResultMap">
+		select * from order_view where email=#{email} and result=#{result} and
+		ord_cd=#{ord_cd}
+	</select>
+
+
+	<select id="selectSeqOrdering" resultType="int">
+		select distinct ord_cd from order_view where email=#{email} and result='1'
+		order by ord_cd desc
+	</select>
+
+	<select id="selectorderdetail" resultMap="memberResultMap">
+		SELECT email,ord_cd,item_name,prod_cd,quantity,saleprice,result,indate FROM
+		order_view where email=#{email} and ord_cd=#{ord_cd}
+	</select>
+
+	<select id="selectMyOrder" resultMap="memberResultMap">
+		SELECT ord_cd,count(*),sum(saleprice),item_name,indate FROM
+		order_view where email=#{email} GROUP BY ord_cd;
+	</select>
+	
+	 <select id="selectOrder2" parameterType="map"
+	      resultMap="memberResultMap">
+	      SELECT * FROM ORDER_VIEW where email = #{email}
+	   </select>
+	   
+	   <select id="selectcntMax" parameterType="String" resultType="int">select max(ord_cd) from kit.orders where email=#{value} </select>
+
+<select id="selectitemlist" resultMap="memberResultMap" parameterType="hashmap">select * from kit.order_view where email=#{email} and ord_cd=#{max} </select>
+</mapper>

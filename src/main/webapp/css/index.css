@@ -1,0 +1,26 @@
+#bestProduct{
+    border:solid 1px #FFFFFF;
+    border-radius:10px;
+    width:910px;
+    min-height:260px;
+    /* backgrourgb(255, 255, 128)beb; */ 
+    padding:10px;
+    text-align: center;    
+}
+
+#item{
+    width:400px;
+    float:left; margin: 0 13px;
+    /* text-align: center; */
+    text-align: left;
+}
+
+
+div#front{
+    margin:5px 0 5px 20px;
+}
+
+
+#title{
+	margin-left : 500px;
+}

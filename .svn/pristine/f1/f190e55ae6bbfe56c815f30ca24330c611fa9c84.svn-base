@@ -1,0 +1,32 @@
+package controller;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+
+import dao.MemberDao;
+import dto.Member;
+
+@Controller
+@RequestMapping("/update")
+public class MemberUpdateController {
+	private MemberDao memberDao;
+
+	public MemberUpdateController setMemberDao(MemberDao memberDao) {
+		this.memberDao = memberDao;
+		return this;
+	}
+	    // 회원 정보 수정 페이지
+	@RequestMapping(method = RequestMethod.GET) 
+		public String form() {
+			return "MemberUpdate";
+		}
+	    
+		// 회원 정보 수정
+	@RequestMapping(method = RequestMethod.POST) 
+		public String update(Member member) throws Exception {
+			memberDao.update(member);
+			return "redirect:/indexlist";
+		}
+	}
+
+	

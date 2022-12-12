@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dao.QnaDao">
+  <resultMap type="qna" id="memberResultMap">
+  
+    <result column="qna_cd"	property="qnacd"/>
+    <result column="category"	property="category"/>
+    <result column="subject"    property="subject"/>
+    <result column="content"    property="content"/>
+    <result column="reply"      property="reply"/>
+    <result column="email"      property="email"/>
+    <result column="rep"      property="rep"/>
+    <result column="indate" property="indate" javaType="java.sql.Timestamp"/>
+    <result column="qimage_cd"      property="qimagecd"/>
+    <result column="image_num"      property="imagenum"/>
+    <result column="image"      property="image"/>
+    
+    
+    
+  </resultMap>  
+  <select id="selectList" parameterType="String" resultMap="memberResultMap">
+    SELECT * FROM qna where email=#{value}
+  </select> 
+  
+  <select id="selectDetail" parameterType="int" resultMap="memberResultMap">
+    SELECT * FROM qna_view WHERE QNA_CD=#{value}
+  </select>
+  
+  <insert id="insert" parameterType="qna">
+  	INSERT INTO qna(category, subject, content, email, indate)
+  	VALUE (#{category},#{subject},#{content},#{email},NOW())
+  </insert>
+  
+  <insert id="insertimg" parameterType="qna">
+  	INSERT INTO qna_image(qna_cd, image)
+  	VALUE (#{qna_cd},#{image})
+  </insert>  	
+  
+  <update id="update" parameterType="qna">
+  	UPDATE qna SET QNA subject=#{subject}, content=#{content},
+  	 indate=NOW(), image=#{image}
+  	WHERE EMAIL=#{email}
+  </update>
+  
+  <delete id="delete" parameterType="int">
+  	DELETE FROM qna WHERE qna_cd=#{value}
+  </delete>
+  
+  
+  <select id="selectOne" parameterType="int" resultMap="memberResultMap">
+  	SELECT * FROM kit.qna where qna_cd=#{value};
+  </select>
+  
+  <select id="selectimages" parameterType="int" resultType="String">
+  	SELECT image FROM kit.qna_image where qna_cd=#{value};
+  </select>
+  
+  
+</mapper>

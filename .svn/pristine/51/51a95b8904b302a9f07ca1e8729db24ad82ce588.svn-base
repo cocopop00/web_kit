@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dao.CartListDao">
+  <resultMap type="CartList" id="memberResultMap">
+     <id column="id" property="id"/> 
+    <result column="cart_cd"	property="cartcd"/>
+    <result column="email"    property="email"/>
+    <result column="prod_cd"    property="prodcd"/>
+    <result column="quantity"      property="quantity"/>
+    <result column="result" property="result"/>
+    <result column="indate"      property="indate"/>
+    <result column="name"      property="name"/>
+    <result column="item_name" property="itemname"/>
+    <result column="saleprice"      property="saleprice"/>
+    <result column="image"      property="image"/>
+    
+  </resultMap>  
+  
+  <select id="selectCart" parameterType="map" resultMap="memberResultMap">
+    SELECT * FROM CART_VIEW WHERE email=#{email}
+  </select>
+  
+  <select id="selectOne" parameterType="cartlist" resultMap="memberResultMap">
+    SELECT * FROM CART_VIEW WHERE email=#{email} AND prod_cd=#{prodcd}
+  </select>
+  
+	<insert id="insertCart" parameterType="hashmap" >
+      INSERT INTO CART(email,prod_cd,quantity,result,indate)
+    VALUES (#{email},#{prodcd},#{quantity},"1",now()) 
+  </insert>
+  
+  <update id="updateCart" parameterType="hashmap" >
+     UPDATE CART SET quantity=#{quantity} WHERE prod_cd=#{prodcd} AND email=#{email}
+  </update>
+  
+  <update id="update_deleteCart" parameterType="hashmap" >
+     UPDATE CART SET quantity=#{quantity} WHERE prod_cd=#{prodcd} AND email=#{email}
+  </update>
+  
+  <delete id="deleteCart" parameterType="hashmap">
+    DELETE FROM CART WHERE prod_cd=#{prodcd} AND email=#{email}
+  </delete>   
+  
+  
+</mapper>

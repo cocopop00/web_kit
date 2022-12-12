@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dao.MemberDao">
+  <resultMap type="member" id="memberResultMap">
+ 	 <result column="email"    property="email"/>
+    <result column="pwd"	property="pwd"/>
+    <result column="name"    property="name"/>
+    <result column="zip_num"      property="zip_num"/>
+    <result column="address"      property="address"/>
+    <result column="phone"      property="phone"/>
+    <result column="point"      property="point"/>
+    <result column="useyn"      property="useyn"/>
+    <result column="level"      property="level"/>
+    <result column="indate" property="indate" javaType="java.sql.Timestamp"/>
+  </resultMap>  
+  
+  <select id="selectList" parameterType="map" resultMap="memberResultMap">
+    SELECT * FROM MEMBER
+  </select>
+  
+  <insert id="insert" parameterType="member">
+    INSERT INTO MEMBER( pwd , name , email , zip_num , address , phone , point,  useyn , level, indate)
+    VALUES (#{pwd},#{name},#{email}, #{zip_num} , #{address} ,#{phone} , #{point}, #{useyn} , #{level}, now())
+  </insert>  
+  
+  
+  <select id="selectOne" parameterType="String" resultMap="memberResultMap">
+    SELECT * FROM MEMBER WHERE EMAIL=#{email}
+  </select>  
+  
+  <select id="select" parameterType="member" resultMap="memberResultMap">
+  	SELECT * FROM MEMBER WHERE EMAIL=#{email} AND PWD=#{pwd}
+  </select> 
+  
+  <select id="emailcheck" parameterType="String" resultType="Integer">
+    select count(*) from MEMBER where EMAIL = #{email}
+</select>
+
+	<select id="findemail" parameterType="Member" resultMap="memberResultMap">
+	select EMAIL from MEMBER where NAME=#{name} AND PHONE=#{phone}
+	</select>
+	
+	<select id="findpwd" parameterType="Member" resultMap="memberResultMap">
+	select PWD from MEMBER where EMAIL=#{email} AND PHONE=#{phone}
+	</select>
+	
+	<update id="update" parameterType="member" >
+    UPDATE MEMBER SET EMAIL=#{email}, NAME=#{name}, PWD=#{pwd}, PHONE=#{phone}, address=#{address}, indate=now()   
+    	WHERE Email=#{email}
+  </update> 
+ 
+</mapper>

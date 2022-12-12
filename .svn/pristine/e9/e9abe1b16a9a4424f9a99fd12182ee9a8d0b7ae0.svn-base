@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dao.EventDao">
+  <resultMap type="event" id="memberResultMap">
+    <result column="event_cd"	property="event_cd"/>
+    <result column="subject"    property="subject"/>
+    <result column="content"    property="content"/>
+    <result column="recom_num"      property="recom_num"/>
+    <result column="eventyn"      property="eventyn"/>
+    <result column="start_dt"      property="start_dt"/>
+    <result column="end_dt"      property="end_dt"/>
+    <result column="indate" property="indate" javaType="java.sql.Timestamp"/>
+ 	<result column="eimage_cd"      property="eimage_cd"/>
+ 	<result column="image"      property="image"/>
+ 	<result column="image_num"      property="count"/>
+  	<result column="total"      property="total"/>
+ 	<result column="y"      property="y"/>
+ 	<result column="n"      property="n"/>	
+  </resultMap>  
+  
+  <select id="selectList" parameterType="int" resultMap="memberResultMap">
+    <!--  SELECT * FROM kit.event_view where image_num=1 ORDER BY event_cd DESC -->
+    SELECT *
+	FROM
+	(
+	  SELECT 
+	      @rownum:=@rownum+1  rnum, 
+	      A.* 
+	  FROM 
+	      (SELECT * FROM kit.event_view where image_num=1 ORDER BY event_cd DESC) A, 
+	      (SELECT @ROWNUM := 0) R
+	  WHERE 
+	      1=1  
+	) list 
+	WHERE <![CDATA[ rnum >= #{value} AND rnum <=#{value}+4  ]]>
+  </select>
+  <select id="selectone" parameterType="int" resultMap="memberResultMap">
+  	SELECT * FROM kit.event_view where event_cd=#{value} and not image_num=1 ORDER BY event_cd DESC
+  </select>
+  <select id="selectone_list" parameterType="hashmap" resultMap="memberResultMap">
+  	<!--  SELECT * FROM kit.event_view where image_num=1 and eventyn=#{value} ORDER BY event_cd DESC-->
+    SELECT *
+	FROM
+	(
+	  SELECT 
+	      @rownum:=@rownum+1  rnum, 
+	      A.* 
+	  FROM 
+	      (SELECT * FROM kit.event_view where image_num=1 and eventyn=#{yn} ORDER BY event_cd DESC) A, 
+	      (SELECT @ROWNUM := 0) R
+	  WHERE 
+	      1=1  
+	) list 
+	WHERE <![CDATA[ rnum >= #{page} AND rnum <=#{page}+4  ]]>  	
+  </select>  
+  <update id="eventyn_update" parameterType="int" >
+ 	    UPDATE kit.event SET recom_num=#{recom_num} WHERE event_cd=#{event_cd}
+  </update>
+  <select id="selectyn_count" resultMap="memberResultMap">
+  	SELECT 
+  	count(event_cd)as total, 
+  	count(case when eventyn='y' then 1 end) as y, 
+  	count(case when eventyn='n' then 1 end) as n
+	from kit.event 
+  </select>
+  
+  
+  
+</mapper>

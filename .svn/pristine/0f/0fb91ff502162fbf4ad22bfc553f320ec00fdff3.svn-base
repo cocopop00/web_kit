@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dao.ProductQnaDao">
+  <resultMap type="productQna" id="memberResultMap">
+    <result column="prod_cd"	property="prod_cd"/>
+    <result column="prodq_cd"    property="prodq_cd"/>
+    <result column="subject"    property="subject"/>
+    <result column="content"      property="content"/>
+    <result column="reply"      property="reply"/>
+    <result column="email"      property="email"/>
+    <result column="name"      property="name"/>
+    <result column="pwd"      property="pwd"/>
+    <result column="secret"      property="secret"/>
+    <result column="rep"      property="rep"/>
+    <result column="indate" property="indate" javaType="java.sql.Timestamp"/>
+  </resultMap>  
+  
+  <insert id="insert" parameterType="ProductQna" >
+  	 insert into kit.product_qna(prod_cd,subject,content,email,name,pwd,secret,rep) VALUES(#{prod_cd},#{subject},#{content},#{email},#{name},#{pwd},#{secret},'1')
+  </insert>
+  
+  
+  <select id="selectlist" parameterType="hashmap" resultMap="memberResultMap" >
+     SELECT *
+	FROM
+	(
+	  SELECT 
+	      @rownum:=@rownum+1  rnum, 
+	      A.* 
+	  FROM 
+	      (select * from kit.product_qna where prod_cd=#{prodcd} ORDER BY prodq_cd DESC) A, 
+	      (SELECT @ROWNUM := 0) R
+	  WHERE 
+	      1=1  
+	) list 
+	WHERE <![CDATA[ rnum >= #{page} AND rnum <=#{page}+4  ]]>  	
+  </select>
+  
+  <select id="selectcount" parameterType="int" resultType="int">
+  	SELECT count(*) FROM kit.product_qna where prod_cd=#{value};
+  </select>
+  
+  <select id="selectone" parameterType="int" resultMap="memberResultMap" >
+  	SELECT * FROM kit.product_qna where prodq_cd=#{value};
+  </select>
+  
+  
+  <delete id="deleteone" parameterType="int">
+  	DELETE FROM kit.product_qna WHERE prodq_cd=#{value}
+  </delete>
+  
+  
+</mapper>
+

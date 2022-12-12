@@ -1,0 +1,15 @@
+eclipse.preferences.version=1
+encoding//src/main/java/Util/SHA256.java=UTF-8
+encoding//src/main/java/config/ControllerConfig.java=UTF-8
+encoding//src/main/java/config/MemberConfig.java=UTF-8
+encoding//src/main/java/controller/EmailFindResultController.java=UTF-8
+encoding//src/main/java/controller/ItemInfoController.java=UTF-8
+encoding//src/main/java/controller/LoginController.java=UTF-8
+encoding//src/main/java/controller/PwdFindResultController.java=UTF-8
+encoding//src/main/java/controller/ReviewDetailController.java=UTF-8
+encoding//src/main/java/controller/ReviewinsertController.java=UTF-8
+encoding//src/main/java/dao/MemberDao.java=UTF-8
+encoding//src/main/java/dto/CartList.java=UTF-8
+encoding//src/main/webapp/WEB-INF/view/loginform.jsp=UTF-8
+encoding//src/main/webapp/css/login.css=UTF-8
+encoding//src/main/webapp/kit_\uCD5C\uBCD1\uADDC,\uAE40\uD604\uC218,\uACF5\uC7AC\uD604,\uAE40\uC784\uC601/DB/\uB370\uC774\uD130\uBCA0\uC774\uC2A4(\uCD5C\uC885)_0823.txt=UTF-8

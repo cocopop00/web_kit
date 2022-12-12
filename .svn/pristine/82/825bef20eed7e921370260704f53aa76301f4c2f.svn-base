@@ -1,0 +1,461 @@
+-- 회원
+
+-- 220821 : 멤버:패스워드 길이 수정, 리뷰:이름 추가,리브뷰 이름 추가
+
+drop table member;
+create table member(   
+	email	   varchar(40)  primary key,
+    pwd        varchar(100),     
+    name       varchar(40),
+    zip_num    varchar(7),
+    address    varchar(100),
+    phone      varchar(20),
+	point	   int(10),
+    useyn      char(1)    default 'y',
+	level	   varchar(10),
+    indate     TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+
+-- 상품
+drop table product;
+create table product(
+    prod_cd      int(5)     primary key auto_increment,
+	item_num     int(5),
+    item_name    varchar(100),
+	regularprice int(7)	  default '0',
+	saleprice	 int(7)   default '0',
+	content		 varchar(1000),
+	useyn        char(1)       	 default 'y',
+	bestyn	     char(1)		 default 'n',
+	newyn        char(1)       	 default 'n',
+	kind         char(1),
+	company_name varchar(100),
+	distri_code	 varchar(100),
+	event_kind char(1) default '0',
+	salerate int(5) 	default  0,
+	indate     TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+
+-- 장바구니
+drop table cart;
+create table cart(
+  cart_cd      int(10)    		primary key auto_increment,  -- 장바구니번호
+  email        varchar(40)   	references member(email),  -- 주문자 아이디(FK :　member.id) 
+  prod_cd      int(5)    		references product(prod_cd), -- 주문 상품번호(FK :product.pseq) 
+  quantity     int(5)     		default 1,        -- 주문 수량
+  result       char(1)       	default '1',      -- 1:미처리 2:처리
+  indate       TIMESTAMP DEFAULT CURRENT_TIMESTAMP   -- 주문일
+);
+
+
+-- 주문(order)
+
+drop table orders;
+create table orders(
+  ord_cd      int(10)  			primary key auto_increment,           	-- 주문번호  
+  email       varchar(40)   	references member(email), 				-- 주문자 아이디
+  indate      TIMESTAMP DEFAULT CURRENT_TIMESTAMP      			-- 주문일
+);
+
+
+-- 주문상세(orderDetail)
+
+drop table order_detail;
+create table order_detail(
+  ordd_cd       int(10)   primary key auto_increment,        -- 주문상세번호
+  ord_cd        int(10)   references orders(ord_cd),   		   -- 주문번호  
+  prod_cd       int(5)    references product(prod_cd),  		   -- 상품번호
+  quantity    	int(5)    	default 1,                         -- 주문수량
+  result      	char(1)      default '1',                     -- 1: 미처리 2: 처리     
+  address	  	varchar(100),
+  phone	  	  	varchar(20)
+);
+
+
+/*
+-- 찜리스트(save)
+drop table item_save;
+create table item_save(
+  save_cd         int(10)    	primary key auto_increment,  -- 장바구니번호
+  email        varchar(40)   	references member(email),
+  prod_cd         int(5)    	references product(prod_cd), -- 주문 상품번호(FK :product.pseq) 
+  quantity     int(5)     		default 1,        -- 주문 수량
+  result       char(1)       	default '1',      -- 1:미처리 2:처리
+  indate       TIMESTAMP DEFAULT CURRENT_TIMESTAMP   -- 주문일
+);
+*/
+
+
+-- 찜리스트(wish)
+
+drop table wish;
+create table wish(
+  wish_cd         int(10)    	primary key auto_increment,  -- 장바구니번호
+  email        varchar(40)   	references member(email),
+  prod_cd         int(5)    	references product(prod_cd), -- 주문 상품번호(FK :product.pseq) 
+  quantity     int(5)     		default 1,        -- 주문 수량
+  result       char(1)       	default '1',      -- 1:미처리 2:처리
+  indate       TIMESTAMP DEFAULT CURRENT_TIMESTAMP   -- 주문일
+);
+
+
+
+-- 제품문의
+drop table product_qna;
+create table product_qna(
+  prod_cd			int(10)	references product(prod_cd),
+  prodq_cd			int(10) primary key auto_increment,
+  subject		varchar(300),
+  content		varchar(1000),
+  reply			varchar(1000),
+  email			varchar(40),
+  name			varchar(40),
+  pwd			varchar(20),
+  secret			char(1) default 'n',		
+  rep			char(1) default '1',
+  indate		TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+
+-- 질문
+ drop table QNA;      
+CREATE TABLE QNA(
+	qna_cd		INT(5)		 primary key auto_increment,
+	category	varchar(100),   
+	subject		VARCHAR(300),
+	content		VARCHAR(1000),
+	reply		VARCHAR(1000),
+	email		VARCHAR(40),
+	rep		VARCHAR(1)	default	'1',
+	indate		TIMESTAMP	 DEFAULT CURRENT_TIMESTAMP
+);
+
+-- 상품리뷰
+drop table review;
+CREATE TABLE review(
+	review_cd	INT(5)  primary key auto_increment,
+	prod_cd		INT(5),		
+	email		VARCHAR(40),
+	name		VARCHAR(20),
+	subject		VARCHAR(300),
+	content		VARCHAR(1000),
+	indate		TIMESTAMP	 DEFAULT CURRENT_TIMESTAMP,
+	recom_num	INT(5)     default	0,
+	useyn		INT(1)		default	1
+);
+
+
+-- 관리자
+drop table worker;
+CREATE TABLE worker(
+	email		varchar(40),
+	pwd			VARCHAR(20),
+	name		VARCHAR(40),
+	phone		VARCHAR(20)
+);
+
+
+-- 이벤트
+drop table EVENT;
+CREATE TABLE EVENT(
+	event_cd	INT(5) primary key auto_increment,
+	subject		VARCHAR(300),
+	content		VARCHAR(1000),
+	recom_num	INT(5),
+	eventyn     char(1)    default 'y',
+	start_dt	VARCHAR(20),
+	end_dt		VARCHAR(20),
+	indate		TIMESTAMP	 DEFAULT CURRENT_TIMESTAMP
+);
+
+
+
+-- 공지사항
+drop table NOTICE;
+CREATE TABLE NOTICE(
+	noti_cd		INT(5) primary key auto_increment,
+	subject		VARCHAR(300),
+	content		VARCHAR(1000),
+	indate		TIMESTAMP	 DEFAULT CURRENT_TIMESTAMP,
+	name		VARCHAR(40),
+	views		INT(5)
+);
+
+
+
+
+
+
+
+-- Qna 이미지
+
+
+ drop table qna_image;
+CREATE TABLE qna_image(
+	qimage_cd	int(5) primary key auto_increment,
+	qna_cd		int(5) references qna(qna_cd),
+	image_num	int(5),
+	image		varchar(50)  default 'default.jpg'
+);
+
+
+
+-- 제품 이미지
+
+drop table p_image;
+CREATE TABLE p_image(
+	pimage_cd	int(5) primary key auto_increment,
+	prod_cd		int(5) references product(prod_cd),
+	image_num	int(5),
+	image		varchar(50)  default 'default.jpg'
+);
+
+
+-- 이벤트 이미지
+
+drop table e_image;
+CREATE TABLE e_image(
+	eimage_cd	int(5) primary key auto_increment,
+	event_cd	int(5) references EVENT(event_cd),
+	image_num	int(5),
+	linkyn		char(1) default 'n',
+	image		varchar(50)  default 'default.jpg'
+);
+
+-- 리뷰 이미지
+
+drop table r_image;
+CREATE TABLE r_image(
+	rimage_cd	int(5) primary key auto_increment,
+	review_cd	int(5) references review(review_cd),
+	image_num	int(5),
+	image		varchar(50)  default 'default.jpg'
+);
+
+
+-- 공지사항 이미지
+
+ drop table n_image;
+CREATE TABLE n_image(
+	nimage_cd	int(5) primary key auto_increment,
+	noti_cd		int(5) references NOTICE(noti_cd),
+	image_num	int(5) default '0',
+	image		varchar(50)  default 'default.jpg'
+);
+
+-- view 
+
+
+-- Qna 뷰
+ drop view qna_view;
+create or replace view qna_view
+as 
+select q.qna_cd, q.category, q.subject, q.content, q.reply,
+q.email, q.rep, q.indate, qi.qimage_cd, qi.image_num, qi.image
+from qna_image qi, Qna q
+where q.qna_cd = qi.qna_cd;
+
+
+
+-- 공지사항 뷰
+drop view notice_view;
+create or replace view notice_view
+as 
+select n.noti_cd, n.subject, n.content, n.indate, n.name,
+n.views, ni.nimage_cd, ni.image
+from n_image ni, NOTICE n
+where n.noti_cd = ni.noti_cd;
+
+
+
+-- 리뷰 뷰
+drop view review_view;
+create or replace view review_view
+as 
+select r.prod_cd, r.review_cd, r.email, r.name,r.subject, r.content,
+r.indate, r.recom_num, r.useyn, ri.rimage_cd,ri.image_num, ri.image
+from r_image ri, review r
+where r.review_cd = ri.review_cd;
+
+
+-- 이벤트 뷰
+drop view event_view;
+create or replace view event_view
+as 
+select e.event_cd, e.subject, e.content, e.recom_num, e.eventyn,e.start_dt,e.end_dt, 
+e.indate, ei.eimage_cd ,linkyn,ei.image_num, ei.image
+from e_image ei, EVENT e
+where e.event_cd = ei.event_cd;
+
+
+-- 제품뷰
+drop view product_view;
+create or replace view product_view
+as
+select p.prod_cd, p.item_num, p.item_name, p.regularprice, p.saleprice,
+p.content, p.kind, p.useyn, p.bestyn, p.newyn, p.company_name,
+p.distri_code,p.indate,pi.pimage_cd,p.salerate, p.event_kind,pi.image_num,pi.image
+from p_image pi, product p 
+where p.prod_cd=pi.prod_cd;
+
+
+-- 오더뷰
+
+
+-- orders, order_detail, member, product  데이터근거로 order view 생성혹은 갱신
+
+drop view order_view;
+create or replace view order_view
+as
+select d.ordd_cd, o.ord_cd, o.email, o.indate, d.prod_cd, d.quantity, m.name,
+m.zip_num, m.address, m.phone, p.item_name, p.saleprice, d.result   
+from orders o, order_detail d, member m, product p 
+where o.ord_cd=d.ord_cd and o.email = m.email and d.prod_cd = p.prod_cd;
+
+
+-- 카트_view
+drop view cart_view;
+create or replace view cart_view
+as
+select o.cart_cd, o.email, o.prod_cd, m.name, p.item_name, 
+o.quantity, o.indate, p.saleprice, o.result ,pi.image_num, pi.image  
+from cart o, member m, product p, p_image pi 
+where o.email = m.email and o.prod_cd = p.prod_cd and p.prod_cd = pi.prod_cd and pi.image_num=1
+and result='1';
+
+
+/* drop view cart_view;
+create or replace view cart_view
+as
+select o.cart_cd, o.email, o.prod_cd, m.name, p.item_name, 
+o.quantity, o.indate, p.saleprice, o.result  
+from cart o, member m, product p 
+where o.email = m.email and o.prod_cd = p.prod_cd
+and result='1'; */
+
+
+/*// 뷰 없이 찾고 싶을때 사용.
+SELECT subject,content,recom_num,in_date,eimage_cd,image 
+FROM event a, e_image b 
+where a.event_cd=b.event_cd
+and a.event_cd='1'; */
+
+
+-- // 사진, 제품이름, 금액, 수량
+
+-- 찜리스트 뷰(wish_view)
+-- drop view wish_view;
+create or replace view wish_view
+as
+select w.wish_cd, w.email, w.prod_cd, w.quantity, w.result, w.indate,
+p.item_name, pi.image_num, pi.image
+from wish w, product p, p_image pi 
+where w.prod_cd = p.prod_cd and p.prod_cd = pi.prod_cd and pi.image_num=1
+and result='1';
+
+
+
+-- 데이터
+
+-- notice 테이블
+insert into kit.notice(subject, content,indate,name,views) value('상품', '안녕하세요 상품은 밀키트로 제작되었습니다. 많은 관심부탁드립니다.',now(),'밀키트',1);
+insert into kit.notice(subject, content,indate,name,views) value('배송', '안녕하세요 상품배송은 냉동식품이라서 보냉처리된 포장을 원칙으로 하여 배송을 진행하고있습니다.',now(),'밀키트',1);
+
+-- n_image 테이블
+insert into kit.n_image(noti_cd, image_num,image) value (1,1,'1.jpg');
+insert into kit.n_image(noti_cd, image_num,image) value (1,2,'2.jpg');
+insert into kit.n_image(noti_cd, image_num,image) value (1,2,'menu.jpg');
+
+
+
+-- Qna 테이불
+insert into kit.qna(category, subject, content, reply, email, rep, indate) value('배송문의', '배송언제되나요', '주문을 한지가 일주일지났는데 왜 발송이 늦죠?', '죄송합니다. 상품 하자로 인해 배송이 늦었습니다. 오늘발송됩니다.', 'test1@test.com', '2', now());
+insert into kit.qna(category, subject, content, reply, email, rep, indate) value('상품문의','상품이이상해요','상품을 받았는데 다른것이왔어요','죄송합니다.재배송해드릴게요','test1@test.com','2',now());
+insert into kit.qna(category, subject, content, email, rep, indate) value('상품문의', '상품이이상해요', '주문한 상품과 배송된 상품이 조금 달라요?', 'test1@test.com', '1', now());
+
+-- qna_image 테이블
+insert into kit.qna_image(qna_cd, image_num,image) value (1,1,'2.jpg');
+insert into kit.qna_image(qna_cd, image_num,image) value (1,2,'1.jpg');
+insert into kit.qna_image(qna_cd, image_num,image) value (1,2,'3.jpg');
+
+
+-- MEMBER (회원)
+INSERT INTO `member` VALUES ('test1@test.com','0ffe1abd1a08215353c233d6e009613e95eec4253832a761af28ff37ac5a150c','이관형','서울시 동묘','123-123','010-5252-5252',0,'y','일반','2022-08-22 08:03:10');
+
+
+-- 이벤트 테이블
+
+INSERT INTO event VALUES 
+(1,'[KITx벼꽃향미] 한식대첩 십리향 쌀 증정 이벤트','여름이다',54,'n','2022-06-07','2022-06-16','2022-08-04 06:18:49'),
+(2,'[KITx최요비]최요비 밀키트 신제품 기대평 이벤트','여름이다',40,'n','2022-06-10','2022-06-19','2022-08-04 06:18:55'),
+(3,'[KIT]8월 VIP SPECAL GIFT','여름이다',12,'y','2022-08-01','2022-08-30','2022-08-04 06:19:00'),
+(4,'[KITx빨간내복코야코]신제품 출시 기념 이벤트','여름이다',1,'y','2022-08-01','2022-08-23','2022-08-04 06:19:05'),
+(5,'[KIT]여름방학 쇼핑','여름이다',2,'y','2022-08-01','2022-08-22','2022-08-04 06:19:10'),
+(6,'[KIT]홈캉스 기획전','여름이다',2,'y','2022-08-15','2022-08-22','2022-08-04 06:19:12');
+
+
+
+/*insert into kit.event(subject,content,recom_num,eventyn,start_dt,end_dt,indate) 
+values("[KITx벼꽃향미] 한식대첩 십리향 쌀 증정 이벤트","여름이다",54,'n','2022-06-07','2022-06-16',now())
+insert into kit.event(subject,content,recom_num,eventyn,start_dt,end_dt,indate) 
+values("[KITx최요비]최요비 밀키트 신제품 기대평 이벤트","여름이다",40,'n','2022-06-10','2022-06-19',now())
+insert into kit.event(subject,content,recom_num,eventyn,start_dt,end_dt,indate) 
+values("[KIT]8월 VIP SPECAL GIFT","여름이다",12,'y','2022-08-01','2022-08-30',now())
+insert into kit.event(subject,content,recom_num,eventyn,start_dt,end_dt,indate) 
+values("[KITx빨간내복코야코]신제품 출시 기념 이벤트","여름이다",1,'y','2022-08-01','2022-08-23',now())
+insert into kit.event(subject,content,recom_num,eventyn,start_dt,end_dt,indate) 
+values("[KIT]여름방학 쇼핑","여름이다",2,'y','2022-08-01','2022-08-22',now())
+insert into kit.event(subject,content,recom_num,eventyn,start_dt,end_dt,indate) 
+values("[KIT]홈캉스 기획전","여름이다",2,'y','2022-08-15','2022-08-22',now())*/
+
+
+-- 이벤트 이미지
+INSERT INTO e_image VALUES 
+(1,1,1,'n','gm-1.jpg'),
+(2,2,1,'n','nm-1.jpg'),
+(3,3,1,'n','mm-1.jpg'),
+(4,4,1,'n','nm-2.jpg'),
+(5,5,1,'n','sm-1.jpg'),
+(6,6,1,'n','sm-2.jpg'),
+(7,6,2,'n','sm-1-1.jpg'),
+(8,6,3,'y','sm-1-2.jpg'),
+(9,6,4,'n','sm-1-3.jpg'),
+(10,3,2,'n','mm-1-1.jpg'),
+(11,1,2,'y','gm-1-1.jpg'),
+(12,2,2,'y','nm-1-1.jpg'),
+(13,4,2,'y','nm-2-1.jpg'),
+(14,5,2,'n','sm-2-1.jpg'),
+(15,5,3,'y','sm-2-2.jpg'),
+(16,5,4,'n','sm-2-3.jpg'),
+(17,5,5,'n','sm-2-4.jpg');
+
+
+/*insert into kit.e_image(event_cd,image_num,image)values(1,1,"gm-1");
+insert into kit.e_image(event_cd,image_num,linkyn,image)values(2,1,"nm-1");
+insert into kit.e_image(event_cd,image_num,linkyn,image)values(3,1,"mm-1");
+insert into kit.e_image(event_cd,image_num,linkyn,image)values(4,1,"nm-2");
+insert into kit.e_image(event_cd,image_num,linkyn,image)values(5,1,"sm-1");
+insert into kit.e_image(event_cd,image_num,linkyn,image)values(6,1,"sm-2");*/
+
+
+
+-- 제품 
+
+/*!40000 ALTER TABLE `product` DISABLE KEYS */;
+INSERT INTO `product` VALUES (1,50,'[KITX라이프멘터리] 준식이 쉬림프 빠에야(3인)',13000,17900,'유튜버 준식님의 레시피로 만든 캠핑 요리입니다.','y','y','n','2','마이셰프','A1-1','0',30,'2022-08-03 20:59:39'),(2,45,'[KIT] 하우스비프스테이크(2인)',11000,14900,'수제소스를 곁들인 고급스러운 스테이크입니다.','y','y','n','2','마이셰프','A1-2','6',2,'2022-08-03 21:01:56'),(3,45,'[KIT]감바스알아히요(2인)',13000,17900,'통통한 새우와 올리브오일에 찍어 먹는 색다른 맛의 스페인 까수엘라 매력에 푹 빠지실 거예요','y','y','n','2','마이셰프','A1-3','0',1,'2022-08-07 18:44:53'),(4,40,'[KIT]밀푀유나베(2인)',12000,16900,'깔끔한 국물이 일품, 부드러운 소고기와 신선한 야채가 잘 어우러진 전골요리입니다.','y','y','n','4','마이셰프','A1-4','6',15,'2022-08-07 18:45:07'),(5,40,'[KIT]궁중 소고기 버섯잡채(2인)',7000,10900,'소고기에 풍부한 감칠맛과 간장 양념의 깊은 잡채요리','y','n','n','1','마이셰프','A1-5','0',22,'2022-08-07 18:45:07'),(6,40,'[KIT]한우소고기무국(2인)',6000,9900,'국산 한우1+ 소고기로 만든 국물까지 깔끔한 소고기무국입니다.','y','n','n','1','마이셰프','A1-1','0',3,'2022-08-07 18:45:07'),(7,40,'[KIT]양장피(2인)',10000,13900,'싱싱한 야채에 맛있는 셰프의 소스까지 중화요리집이 부럽지 않은 맛있는 메뉴입니다.','y','n','n','3','마이셰프','A1-4','6',5,'2022-08-07 18:45:07'),(8,40,'[KIT]뜨끈한 쌀국수(1인)',7000,10900,'깔끔한 국물이 일품, 현지에서 먹는 그맛 쌀국수','y','n','n','5','마이셰프','A1-5','0',5,'2022-08-07 18:45:07'),(9,40,'[KIT]모듬닭쌈 찜 샐러드',6000,9900,'퍽퍽하지 않고 부드러운 닭가슴살에 신선한 야채가 어우러진 샐러드','y','n','n','6','마이셰프','A1-4','0',5,'2022-08-07 18:45:07'),(10,40,'[KIT]일품 소고기 고추잡채 꽃빵(2인)',9000,11900,'느끼하지 않고 깔끔한 고급스런 고추잡채입니다.','y','n','n','3','마이셰프','A1-4','0',1,'2022-08-07 18:45:07'),(11,40,'[KIT]한우소고기미역국(2인)',6000,8900,'최고급 산모용 청정미역으로 맛을 낸 한우미역국입니다.','y','n','n','1','마이셰프','A1-4','0',10,'2022-08-07 18:45:07'),(12,40,'[KITx빨간내복야코] 빨간내복야코 한입만 찹소떡(2인)',11000,15900,'온가족이 맛있게 즐길 수 있는 케찹범벅!','y','n','y','1','마이셰프','A1-4','4',5,'2022-08-07 18:45:07'),(13,40,'[KITx빨간내복야코] 빨간내복야코 점보 닭다리 볶음밥(1인)',9000,12900,'부드러운 닭다리살 케찹범벅!','y','n','y','1','마이셰프','A1-4','4',5,'2022-08-07 18:45:07'),(14,40,'[KIT] 볼케이노나베(2인) 공유',11900,14900,'찬바람 불땐 따듯한 국물','y','n','y','4','마이세프','B1-1','0',32,'2022-08-17 15:49:21'),(15,50,'[KIT] 직화 불고기 떡볶이(3인)',9900,12900,'불맛 가득 매콤달콤 떡볶이','y','n','y','1','마이세프','B1-2','6',11,'2022-08-18 03:18:56'),(18,50,'[KIT] 일품 소고기육전(2인)',13900,16900,'단백한 고기 육전','y','n','y','1','마이세프','B1-2','0',2,'2022-08-19 00:41:31'),(19,20,'[KIT] 사골떡만둣국(1인)',4900,7900,'진한 국물이 일품인 사골떡만둣국','y','n','y','1','마이세프','B1-3','0',9,'2022-08-19 00:44:44'),(20,25,' [KIT] 매콤 불고기 누들 샐러드(1인)',5900,8900,'배불러도 196칼로리!','y','n','y','6','마이셰프','C1-1','0',6,'2022-08-19 01:15:10'),(21,35,'[KIT] 진한 사골 설렁탕(1인)',5900,9900,'진한 사골국물','y','n','y','1','마이셰프','A1-2','0',7,'2022-08-19 01:19:21'),(22,35,'[KITxEBS 최요비] 냉채족발과 메밀면(2인)',13900,16900,'화려한 비주얼의 손님 접대용 요리','y','n','y','1','마이셰프','A1-3','2',4,'2022-08-19 01:24:37'),(23,50,'[KIT] 나시고랭(2인)',5900,9900,'동남아 여행 온 느낌의 나시고랭','y','n','y','5','마이셰프','B1-1','6',8,'2022-08-19 01:30:17'),(24,50,'[KIT]실속 부대찌개(2인)',6900,10900,'햄 많이! 실속 부대찌개','y','n','y','1','마이셰프','B1-2','6',2,'2022-08-19 01:35:43'),(25,50,'[KIT]훈제오리무쌈(2인)',7900,11900,'다채로운 채소와 쌈무의 아삭한 식감을 더한 훈제오리무쌈말이','y','n','y','1','마이셰프','B1-3','0',2,'2022-08-19 01:39:21'),(26,50,'[KIT] 안동식 순살 찜닭(2인)',13900,16900,'매콤하면서 달달한 찜닭','y','n','y','1','마이셰프','B1-1','6',9,'2022-08-19 01:43:52'),(27,50,'[KIT]소고기 가득 된장찌개(2인)',6900,9900,'고소하고 진한 고기 된장찌개','y','n','y','1','마이셰프','B1-1','0',6,'2022-08-19 01:46:13'),(28,35,'[KIT]바질페스토 파스타(2인)',12900,15900,'바질 좋아하는 분들에게 추천','y','n','y','2','마이세프','B1-1','6',5,'2022-08-19 01:58:26'),(29,50,'[KIT]비프 볼로네제 파스타​(2인)',10900,13900,'온가족이 즐길 수 있는 파스타','y','n','y','2','마이셰프','B1-3','6',4,'2022-08-19 02:00:14'),(30,50,'[KIT]갈릭 알리오올리오 파스타(2인)',7500,11500,'알리오! 에리오! 오일 파스타','y','n','y','2','마이세프','B1-3','6',2,'2022-08-19 02:02:20'),(31,50,'[KIT]르네 프렌치스테이크(2인)',10000,14900,'담백고소육즙 촥! 스테이크','y','n','y','2','마이셰프','B1-3','6',3,'2022-08-19 02:04:36'),(32,30,'[KIT]리얼 스테이크 피자(2인)',13900,16900,'에어프라이어만 있으면 오케이!','y','n','y','2','마이셰프','B1-3','0',6,'2022-08-19 02:07:23'),(33,50,'[KIT]그린 올리브 치아바타',2900,5900,'식전빵에는 치아바타','y','n','y','2','마이셰프','B1-2','0',4,'2022-08-19 02:09:55'),(34,50,'[KIT]포크안심스테이크(2인)',9900,12900,'국내산 돼지 안심으로 만들어 더욱 신선하고, 달콤한 데리야끼 소스와 버터향이 물씬풍기는 가니쉬와 함께해요.','y','n','y','2','마이셰프','B1-2','6',2,'2022-08-19 02:11:34'),(35,35,'[KIT]트러플 버섯 파스타(2인)',5900,9900,'다진 트러플이 들어간 풍미 좋은 파스타','y','n','y','2','마이셰프','B1-2','6',5,'2022-08-19 02:13:50'),(36,50,'[KIT]토마호크 스테이크(2인)',40000,44200,'유튜버 \"밥굽남\"으로 히트 친 그 스테이크!','y','n','y','2','마이셰프','A1-3','0',2,'2022-08-19 02:16:40'),(37,35,'[KIT]원팬 소고기 화이트 파스타(2인)',7900,11900,'소고기를 더한 크림파스타','y','n','y','2','마이셰프','B1-2','6',3,'2022-08-19 02:19:19'),(38,15,'[KIT]헬케이노 국물닭발(2인)',12900,15900,'중독성 강한 매운맛','y','n','y','1','마이셰프','A1-2','6',6,'2022-08-19 02:23:07'),(39,50,'[KIT]우정분식 물떡 어묵탕(2인)',8900,12900,'떡볶이와 어묵은 하나!','y','n','y','1','마이셰프','B1-1','6',4,'2022-08-19 02:27:29'),(40,50,'[KIT]이금기 탄탄면(2인)',10900,14900,'알싸한 이 느낌! 탄탄면','y','n','y','3','마이셰프','B1-1','0',5,'2022-08-19 02:30:12'),(41,35,'[KIT]사천식 마라샹궈(2인)',14900,17900,'사천식 마라샹궈','y','n','y','3','마이셰프','B1-1','0',2,'2022-08-19 02:32:41'),(42,15,'[KIT]소고기 중화덮밥 키트(2인)',8900,12900,'고소한 소고기 덮밥','y','n','y','3','마이셰프','B1-2','0',1,'2022-08-19 02:34:32'),(43,15,'[KIT]고기가득 마파두부(2인)',5900,9900,'고기가득 마파두부','y','n','y','3','마이셰프','B1-3','0',5,'2022-08-19 02:35:55'),(44,35,'[KIT]마라탕(2인)',10000,13900,'크으 먹고싶은 마라탕!','y','n','y','3','마이셰프','B1-3','0',0,'2022-08-19 02:38:13'),(45,35,'[KIT]일호식 메밀소바와 순살닭튀김(2인)',11000,15900,'닭튀김과 소바의 조합','y','n','y','4','마이셰프','B1-3','0',0,'2022-08-19 02:40:46'),(46,50,'[KIT]알찬 소고기 스키야키(2인)',13900,16900,'겨울에는 스키야키!','y','n','y','4','마이셰프','B1-3','0',0,'2022-08-19 02:42:45'),(47,35,'[KIT]새우 듬뿍 쿵 팟 퐁커리(2인)',12900,15900,'동남아 커리','y','n','y','5','마이셰프','B1-3','0',0,'2022-08-19 02:45:08');
+/*!40000 ALTER TABLE `product` ENABLE KEYS */;
+
+
+
+
+-- 제품 이미지
+
+INSERT INTO `p_image` VALUES (1,1,1,'wm-1-1.jpg'),(2,1,2,'wm-1-2.jpg'),(3,1,3,'ws-1-2.jpg'),(4,1,4,'ws-1-3.jpg'),(5,1,5,'ws-1-4.jpg'),(6,1,6,'ws-1-5.jpg'),(7,1,7,'ws-1-6.jpg'),(8,2,1,'wm-2-1.jpg'),(9,2,2,'wm-2-2.jpg'),(10,2,3,'ws-2-1.jpg'),(11,2,4,'ws-2-2.jpg'),(12,2,5,'ws-2-3.jpg'),(13,3,1,'wm-3-1.jpg'),(14,3,2,'wm-3-2.jpg'),(15,3,3,'ws-3-1.jpg'),(16,3,4,'ws-3-2.jpg'),(17,3,5,'ws-3-3.jpg'),(18,4,1,'wm-4-1.jpg'),(19,4,2,'wm-4-2.jpg'),(20,4,3,'ws-4-1.jpg'),(21,4,4,'ws-4-2.jpg'),(22,4,5,'ws-4-3.jpg'),(23,5,1,'wm-5-1.jpg'),(24,5,2,'wm-5-2.jpg'),(25,5,3,'ws-5-1.jpg'),(26,5,4,'ws-5-2.jpg'),(27,5,5,'ws-5-3.jpg'),(28,5,6,'ws-5-4.jpg'),(29,6,1,'wm-6-1.jpg'),(30,6,2,'wm-6-2.jpg'),(31,6,3,'ws-6-1.jpg'),(32,6,4,'ws-6-2.jpg'),(33,6,5,'ws-6-3.jpg'),(34,6,6,'ws-6-4.jpg'),(35,6,7,'ws-6-5.jpg'),(36,7,1,'wm-7-1.jpg'),(37,7,2,'wm-7-2.jpg'),(38,7,3,'ws-7-1.jpg'),(39,7,4,'ws-7-2.jpg'),(40,7,5,'ws-7-3.jpg'),(41,7,5,'ws-7-4.jpg'),(42,7,5,'ws-7-5.jpg'),(43,8,1,'wm-8-1.jpg'),(44,8,2,'wm-8-2.jpg'),(45,8,3,'ws-8-1.jpg'),(46,8,4,'ws-8-2.jpg'),(47,8,5,'ws-8-3.jpg'),(48,8,6,'ws-8-4.jpg'),(49,8,7,'ws-8-5.jpg'),(50,9,1,'wm-9-1.jpg'),(51,9,2,'wm-9-2.jpg'),(52,9,3,'ws-9-1.jpg'),(53,9,4,'ws-9-2.jpg'),(54,9,5,'ws-9-3.jpg'),(55,9,6,'ws-9-4.jpg'),(56,9,7,'ws-9-5.jpg'),(57,9,8,'ws-9-6.jpg'),(58,10,1,'wm-10-1.jpg'),(59,10,2,'wm-10-2.jpg'),(60,10,3,'ws-10-1.jpg'),(61,10,4,'ws-10-2.jpg'),(62,10,5,'ws-10-3.jpg'),(63,10,6,'ws-10-4.jpg'),(64,10,7,'ws-10-5.jpg'),(65,11,1,'wm-11-1.jpg'),(66,11,2,'wm-11-2.jpg'),(67,11,3,'ws-11-1.jpg'),(68,11,4,'ws-11-2.jpg'),(69,11,5,'ws-11-3.jpg'),(70,11,6,'ws-11-4.jpg'),(71,11,7,'ws-11-5.jpg'),(72,12,1,'wm-12-1.jpg'),(73,12,2,'wm-12-2.jpg'),(74,12,3,'ws-12-1.jpg'),(75,12,4,'ws-12-2.jpg'),(76,12,5,'ws-12-3.jpg'),(77,12,6,'ws-12-4.jpg'),(78,13,1,'wm-13-1.jpg'),(79,13,2,'wm-13-2.jpg'),(80,13,3,'ws-13-1.jpg'),(81,13,4,'ws-13-2.jpg'),(82,13,5,'ws-13-3.jpg'),(83,13,6,'ws-13-4.jpg'),(84,14,1,'1000001154_magnify_023.jpg'),(85,14,2,'1000001154_magnify_125.jpg'),(86,14,3,'1000001154_magnify_392.jpg'),(87,14,4,'1000001154_magnify_498.jpg'),(88,14,5,'mychef_volcano_nave.jpg'),(89,15,1,'1000001534_magnify_12.jpg'),(90,15,2,'1000001534_magnify_094.jpg'),(91,15,3,'1000001534_magnify_448.jpg'),(92,15,4,'1000001534_magnify_588.jpg'),(93,15,5,'bulgogi_tteokbokki.jpg'),(104,18,1,'1000001628_magnify_09.jpg'),(105,18,2,'1000001628_magnify_176.jpg'),(106,18,3,'1000001628_magnify_255.jpg'),(107,18,4,'2022-08-19_094102.jpg'),(108,18,5,'2020_pan_fried_battered_beef.jpg'),(109,19,1,'1000001207_magnify_069.jpg'),(110,19,2,'1000001207_magnify_15.jpg'),(111,19,3,'1000001207_magnify_371.jpg'),(112,19,4,'1000001207_magnify_492.jpg'),(113,19,5,'tteok_mandu_guk.jpg'),(114,20,1,'1000001779_magnify_08.jpg'),(115,20,2,'1000001779_magnify_29.jpg'),(116,20,3,'1000001779_magnify_439.jpg'),(117,20,4,'1000001779_magnify_511.jpg'),(118,20,5,'spicy_bulgogi_noodle_salad.jpg'),(119,21,1,'1000001588_magnify_044.jpg'),(120,21,2,'1000001588_magnify_17.jpg'),(121,21,3,'1000001588_magnify_389.jpg'),(122,21,4,'1000001588_magnify_483.jpg'),(123,21,5,'seolleongtang.jpg'),(124,22,1,'1000002260_magnify_120.jpg'),(125,22,2,'1000002260_magnify_211.jpg'),(126,22,3,'1000002260_magnify_47.jpg'),(127,22,4,'1000002260_magnify_582.jpg'),(128,22,5,'ebs_naengchae_jokbal.jpg'),(129,23,1,'1000000562_magnify_039.jpg'),(130,23,2,'1000000562_magnify_190.jpg'),(131,23,3,'1000000562_magnify_250.jpg'),(132,23,4,'1000000562_magnify_33.jpg'),(133,23,5,'mychef_nasi_goreng.jpg'),(134,24,1,'1000001493_magnify_079.jpg'),(135,24,2,'1000001493_magnify_138.jpg'),(136,24,3,'1000001493_magnify_452.jpg'),(137,24,4,'1000001493_magnify_541.jpg'),(138,24,5,'sausage_stew.jpg'),(139,25,1,'1000000769_magnify_074.jpg'),(140,25,2,'1000000769_magnify_1100.jpg'),(141,25,3,'1000000769_magnify_377.jpg'),(142,25,4,'1000000769_magnify_483.jpg'),(143,25,5,'053_Smoked_Duck_Radish_Wrap.jpg'),(144,26,1,'1000001697_magnify_064.jpg'),(145,26,2,'1000001697_magnify_12.jpg'),(146,26,3,'t50_1000001697_magnify_230.jpg'),(147,26,4,'1000001697_magnify_388.jpg'),(148,27,1,'1000001486_magnify_140.jpg'),(149,27,2,'1000001486_magnify_053.jpg'),(150,27,3,'1000001486_magnify_233.jpg'),(151,27,4,'1000001486_magnify_335.jpg'),(152,27,5,'beef_brisket_doenjang_stew_new.jpg'),(153,28,1,'1000002256_magnify_057.jpg'),(154,28,2,'1000002256_magnify_286.jpg'),(155,28,3,'1000002256_magnify_479.jpg'),(156,28,4,'1000002256_magnify_558.jpg'),(157,28,5,'basil_pesto_pasta.jpg'),(158,29,1,'1000002236_magnify_072.jpg'),(159,29,2,'1000002236_magnify_235.jpg'),(160,29,3,'1000002236_magnify_471.jpg'),(161,29,4,'1000002236_magnify_512.jpg'),(162,29,5,'beef_bolognese_pasta.jpg'),(163,30,1,'1000002235_magnify_092.jpg'),(164,30,2,'1000002235_magnify_254.jpg'),(165,30,3,'1000002235_magnify_529.jpg'),(166,30,4,'1000002235_magnify_666.jpg'),(167,30,5,'garlic_aglio_olio_pasta.jpg'),(168,31,1,'1000001254_magnify_08.jpg'),(169,31,2,'1000001254_magnify_11.jpg'),(170,31,3,'1000001254_magnify_336.jpg'),(171,31,4,'1000001254_magnify_466.jpg'),(172,31,5,'rene_french_steak.jpg'),(173,32,1,'1000001585_magnify_011.jpg'),(174,32,2,'1000001585_magnify_285.jpg'),(175,32,3,'1000001585_magnify_37.jpg'),(176,32,4,'1000001585_magnify_44.jpg'),(177,32,5,'real_steak_pizza.jpg'),(178,33,1,'1000001983_magnify_140.jpg'),(179,33,2,'1000001983_magnify_057.jpg'),(180,33,3,'1000001983_magnify_249.jpg'),(181,33,4,'1000001983_magnify_315.jpg'),(182,33,5,'shilla_ciabatta.jpg'),(183,34,1,'1000001083_magnify_073.jpg'),(184,34,2,'1000001083_magnify_192.jpg'),(185,34,3,'1000001083_magnify_399.jpg'),(186,34,4,'1000001083_magnify_477.jpg'),(187,34,5,'Pork_Tenderloin_Steak.jpg'),(188,35,1,'1000002151_magnify_015.jpg'),(189,35,2,'1000002151_magnify_259.jpg'),(190,35,3,'1000002151_magnify_45.jpg'),(191,35,4,'1000002151_magnify_5100.jpg'),(192,35,5,'truffle_pasta.jpg'),(193,36,1,'1000001232_magnify_073.jpg'),(194,36,2,'1000001232_magnify_169.jpg'),(195,36,3,'1000001232_magnify_457.jpg'),(196,36,4,'1000001232_magnify_531.jpg'),(197,36,5,'tomahawk_steak.jpg'),(198,37,1,'1000002173_magnify_046.jpg'),(199,37,2,'1000002173_magnify_290.jpg'),(200,37,3,'1000002173_magnify_459.jpg'),(201,37,4,'1000002173_magnify_568.jpg'),(202,37,5,'one_pan_white_pasta.jpg'),(203,38,1,'1000001306_magnify_096.jpg'),(204,38,2,'1000001306_magnify_242.jpg'),(205,38,3,'1000001306_magnify_331.jpg'),(206,38,4,'1000001306_magnify_420.jpg'),(207,38,5,'hellcano_chicken_feet.jpg'),(208,39,1,'1000002283_magnify_06.jpg'),(209,39,2,'1000002283_magnify_133.jpg'),(210,39,3,'1000002283_magnify_344.jpg'),(211,39,4,'1000002283_magnify_445.jpg'),(212,39,5,'ujeonging_eomuktang.jpg'),(213,40,1,'1000002026_magnify_079.jpg'),(214,40,2,'1000002026_magnify_114.jpg'),(215,40,3,'1000002026_magnify_313.jpg'),(216,40,4,'1000002026_magnify_465.jpg'),(217,40,5,'lkk_dandan_noodles.jpg'),(218,41,1,'1000001675_magnify_045.jpg'),(219,41,2,'1000001675_magnify_19.jpg'),(220,41,3,'1000001675_magnify_361.jpg'),(221,41,4,'1000001675_magnify_447.jpg'),(222,41,5,'szechuan_mala_xiangguo.jpg'),(223,42,1,'1000001681_magnify_040.jpg'),(224,42,2,'1000001681_magnify_290.jpg'),(225,42,3,'1000001681_magnify_353.jpg'),(226,42,4,'1000001681_magnify_428.jpg'),(227,42,5,'chinese_beef_bowls.jpg'),(228,43,1,'1000001209_magnify_026.jpg'),(229,43,2,'1000001209_magnify_26.jpg'),(230,43,3,'1000001209_magnify_355.jpg'),(231,43,4,'1000001209_magnify_441.jpg'),(232,43,5,'2019_mapo_tofu.jpg'),(233,44,1,'1000001216_magnify_072.jpg'),(234,44,2,'1000001216_magnify_185.jpg'),(235,44,3,'1000001681_magnify_3531.jpg'),(236,44,4,'1000001216_magnify_318.jpg'),(237,44,5,'2019_maratang.jpg'),(238,45,1,'1000002242_magnify_317.jpg'),(239,45,2,'1000002242_magnify_254.jpg'),(240,45,3,'1000002242_magnify_541.jpg'),(241,45,4,'1000002242_magnify_673.jpg'),(242,45,5,'ilhochic_soba_noodles_fried_chicken.jpg'),(243,46,1,'1000002192_magnify_01.jpg'),(244,46,2,'1000002192_magnify_268.jpg'),(245,46,3,'1000002192_magnify_521.jpg'),(246,46,4,'1000002192_magnify_462.jpg'),(247,46,5,'beef_sukiyaki.jpg'),(248,47,1,'1000001680_magnify_089.jpg'),(249,47,2,'1000001680_magnify_129.jpg'),(250,47,3,'1000001680_magnify_257.jpg'),(251,47,4,'1000001680_magnify_388.jpg'),(252,47,5,'shrimp_with_curry_sauce.jpg'),(254,26,5,'aaasd.jpg');
+
+
+
+-- order
+
+

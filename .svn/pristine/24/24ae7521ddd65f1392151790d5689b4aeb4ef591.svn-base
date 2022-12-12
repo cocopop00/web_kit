@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dao.ReviewDao">
+  <resultMap type="Review" id="memberResultMap">
+    <result column="prod_cd"	property="prod_cd"/>
+    <result column="item_name"    property="item_name"/>
+    <result column="review_cd"    property="review_cd"/>
+    <result column="email"      property="email"/>
+    <result column="name"      property="name"/>
+    <result column="subject"      property="subject"/>
+    <result column="content"      property="content"/>
+    <result column="recom_num"      property="recom_num"/>
+    <result column="useyn"      property="useyn"/>
+    <result column="image_num"      property="image_num"/>
+    <result column="image"      property="image"/>
+    <result column="indate" property="indate" javaType="java.sql.Timestamp"/>
+  </resultMap>
+  
+  <insert id="insertimage" parameterType="hashmap" >
+  	insert into kit.r_image(review_cd,image_num,image) values(#{reviewcd},#{imagenum},#{image})
+  </insert>
+  
+  
+  <insert id="insertpd" parameterType="Review">
+  	insert into kit.review(prod_cd,email,name,subject,content,recom_num) values(#{prod_cd},#{email},#{name},#{subject},#{content},0)
+  </insert>
+  
+  
+  <select id="selectmax" resultType="int">
+  	SELECT max(review_cd) FROM kit.review;
+  </select>
+  
+  <select id="selectlist" parameterType="int"  resultMap="memberResultMap">
+    SELECT *
+	FROM
+	(
+	  SELECT 
+	      @rownum:=@rownum+1  rnum, 
+	      A.* 
+	  FROM 
+	      (select * from kit.review_view where image_num=1 ORDER BY review_cd DESC) A, 
+	      (SELECT @ROWNUM := 0) R
+	  WHERE 
+	      1=1  
+	) list 
+	WHERE <![CDATA[ rnum >= #{page} AND rnum <=#{page}+11  ]]>  	
+  </select>
+  
+  
+   <select id="selectcount"  resultType="int">
+  	SELECT count(*) FROM kit.review_view where image_num=1;
+  </select>
+  
+    
+    <select id="selectreviewdetail" parameterType="int"  resultMap="memberResultMap">
+    	select * from kit.review_view where review_cd=#{value}
+    </select>
+    
+    
+    <update id="updaterecom" parameterType="hashmap">
+    	UPDATE kit.review SET recom_num=#{recomnum} WHERE review_cd=#{reviewcd}
+    </update>
+    
+    <select id="selectmylist" parameterType="String"  resultMap="memberResultMap">
+    	select * from kit.review_view where image_num=1 and email=#{value} ORDER BY review_cd DESC
+    </select>
+    
+    
+  </mapper>

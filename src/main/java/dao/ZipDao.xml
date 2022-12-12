@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dao.ZipDao">
+	<resultMap type="ZipCode" id="memberResultMap">
+		<result column="zip_num" property="zip_num" />
+		<result column="sido" property="sido" />
+		<result column="gugun" property="gugun" />
+		<result column="dong" property="dong" />
+		<result column="zip_code" property="zip_code" />
+		<result column="bunji" property="bunji" />
+	</resultMap>
+
+	<select id="selectzip" parameterType="String"
+		resultMap="memberResultMap	">
+		select * from address where DONG like CONCAT(#{value}, '%');
+	</select>
+</mapper>

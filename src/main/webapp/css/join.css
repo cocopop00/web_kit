@@ -1,0 +1,68 @@
+.join-header{
+    margin:90px 90px;
+    text-align:center;
+    display: flex;
+    flex-direction: column;
+    align-items: center; 
+}
+.join-header__title{
+    font-size: 30px;
+}
+.join-header__logo{
+   margin-bottom:-30px;
+
+}
+.join-header__logo-photo{
+    position: relative;
+}
+.join-header__logo-photo img{
+	width:30px;
+	height:30px;
+}
+#join-form{
+    display:flex;
+    flex-direction: column;
+    align-items: center;
+}
+#join-form input{
+    border:1px solid rgba(0,0,0,0.2);
+    width:400px;
+   	height:70px;
+    padding:32px 20px;
+    border-radius: 13px;
+    margin-bottom: 25px;
+    font-size: 20px;
+    
+}
+#join-form input:not([type="submit"]){
+  	
+    transition: border-color 0.3s ease-in-out;
+}
+
+#join-form input::placeholder{
+    color:rgba(0,0,0,0.4);
+}
+#join-form input:focus{
+    border-color:var(--yellow);
+}
+#join-form input[type="submit"]{
+	padding:20px 0px;
+    border: none;
+    background-color:var(--yellow);
+    cursor:pointer;
+    color: white;
+    border-bottom:1px solid rgba(0,0,0,0.2);
+    font-size:25px;
+}
+
+#join-form input[id="btmCheck"]{
+	padding:20px 0px;
+    border: none;
+    cursor:pointer;
+    WIDTH: 130px;
+    HEIGHT: 50px;
+    color: white;
+    border-bottom:1px solid rgba(0,0,0,0.2);
+    font-size:25px;
+}
+

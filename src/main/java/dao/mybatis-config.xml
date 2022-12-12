@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<properties resource="dao/db.properties"/>  
+  <typeAliases>  
+   <typeAlias type="dto.CartList" alias="cartlist"/>  
+   <typeAlias type="dto.Event" alias="event"/>
+    <typeAlias type="dto.Member" alias="member"/>
+    <typeAlias type="dto.Notice" alias="notice"/>
+    <typeAlias type="dto.OftenQna" alias="oftenQna"/>
+    <typeAlias type="dto.OrderList" alias="orderlist"/>
+    <typeAlias type="dto.Product" alias="product"/>
+    <typeAlias type="dto.ProductQna" alias="productQna"/>
+    <typeAlias type="dto.Qna" alias="qna"/>
+    <typeAlias type="dto.Review" alias="review"/>
+    <typeAlias type="dto.WishList" alias="wishList"/>
+    <typeAlias type="dto.ZipCode" alias="ZipCode"/>
+    
+    
+    
+    
+  </typeAliases>  
+  <environments default="development">
+    <environment id="development">
+      <transactionManager type="JDBC"/>
+      <dataSource type="POOLED">
+        <property name="driver" value="${driver}"/>
+        <property name="url" value="${url}"/>
+        <property name="username" value="${username}"/>
+        <property name="password" value="${password}"/>
+      </dataSource>
+    </environment>
+  </environments>
+  <mappers>
+    <mapper resource="dao/MemberDao.xml"/>
+    <mapper resource="dao/EventDao.xml"/>
+    <mapper resource="dao/ProductDao.xml"/>
+    <mapper resource="dao/CartListDao.xml"/>
+    <mapper resource="dao/OrderListDao.xml"/>
+    <mapper resource="dao/ProductQnaDao.xml"/>
+    <mapper resource="dao/ReviewDao.xml"/>
+    <mapper resource="dao/WishListDao.xml"/>
+    <mapper resource="dao/OftenQnaDao.xml"/>
+    <mapper resource="dao/QnaDao.xml"/>
+    <mapper resource="dao/NoticeDao.xml"/>
+    <mapper resource="dao/ZipDao.xml"/>
+    
+  </mappers>
+</configuration>

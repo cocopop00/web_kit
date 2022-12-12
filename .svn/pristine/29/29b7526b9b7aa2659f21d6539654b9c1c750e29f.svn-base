@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dao.WishListDao">
+  <resultMap type="WishList" id="memberResultMap">
+     <id column="id" property="id"/> 
+    <result column="wish_cd"	property="wishcd"/>
+    <result column="email"    property="email"/>
+    <result column="prod_cd"    property="prodcd"/>
+    <result column="result" property="result"/>
+    <result column="indate"      property="indate"/>
+    <result column="item_name" property="itemname"/>
+    <result column="name"      property="name"/>
+    <result column="image_num"      property="imagenum"/>
+    <result column="image"      property="image"/>
+   
+    
+  </resultMap>  
+  
+  <select id="selectWish" parameterType="map" resultMap="memberResultMap">
+    SELECT * FROM WISH_VIEW WHERE email=#{email}
+  </select>
+  
+  <select id="selectOne" parameterType="wishlist" resultMap="memberResultMap">
+    SELECT * FROM WISH_VIEW WHERE email=#{email} AND prod_cd=#{prodcd}
+  </select>
+  
+	<insert id="insertWish" parameterType="hashmap" >
+      INSERT INTO WISH(wish_cd,email,prod_cd,result,indate)
+    VALUES (#{wishcd},#{email},#{prodcd},"1",now()) 
+  </insert>
+  
+   <update id="updateWish" parameterType="hashmap" >
+     UPDATE WISH SET result="2" WHERE prod_cd=#{prodcd} AND email=#{email}
+  </update>
+  
+  <delete id="deleteWish" parameterType="hashmap">
+    DELETE FROM WISH WHERE prod_cd=#{prodcd} AND email=#{email}
+  </delete>   
+  
+  
+</mapper>

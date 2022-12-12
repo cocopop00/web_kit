@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dao.NoticeDao">
+  <resultMap type="Notice" id="memberResultMap">
+    <result column="noti_cd"	property="noticd"/>
+    <result column="subject"    property="subject"/>
+    <result column="content"    property="content"/>
+    <result column="indate" property="indate" javaType="java.sql.Timestamp"/>
+    <result column="name"      property="name"/>
+    <result column="views"      property="views"/>
+    <result column="nimage_cd"      property="nimagecd"/>
+    <result column="image"      property="image"/>
+  </resultMap>  
+  
+  
+  <select id="selectList" parameterType="map" resultMap="memberResultMap">
+    SELECT * FROM notice
+  </select>
+  <select id="selectDetail" parameterType="int" resultMap="memberResultMap">
+    SELECT * FROM notice_view WHERE NOTI_CD=#{value}
+  </select>
+    <!-- <select id="selectOne" parameterType="int" resultMap="memberResultMap">
+    SELECT * FROM notice_view WHERE NOTI_CD=#{noti_cd}
+  </select> -->  
+  
+</mapper>

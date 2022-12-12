@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dao.QnaDao">
+  <resultMap type="qna" id="memberResultMap">
+  
+    <result column="qna_cd"	property="qnacd"/>
+    <result column="category"	property="category"/>
+    <result column="subject"    property="subject"/>
+    <result column="content"    property="content"/>
+    <result column="reply"      property="reply"/>
+    <result column="email"      property="email"/>
+    <result column="rep"      property="rep"/>
+    <result column="indate" property="indate" javaType="java.sql.Timestamp"/>
+    <result column="image1"      property="image1"/>
+    <result column="image2"      property="image2"/>
+    <result column="image3"      property="image3"/>
+  </resultMap>  
+  <select id="selectList" parameterType="map" resultMap="memberResultMap">
+    SELECT * FROM qna
+  </select> 
+  <select id="selectDetail" parameterType="int" resultMap="memberResultMap">
+    SELECT * FROM qna WHERE NOTI_CD=#{value}
+  </select>
+  <insert id="insert" parameterType="qna">
+  	INSERT INTO QNA(category, subject, content, reply, email, rep, indate, image1, image2, image3)
+  	VALUE (#{category},#{subject},#{content},#{reply},#{email},#{rep},NOW(),#{image1},#{image2},#{image3})
+  </insert>
+  <update id="update" parameterType="qna">
+  	UPDATE QNA SET QNA category=#{category}, subject=#{subject}, content=#{content},
+  	 reply=#{reply}, indate=NOW(), image1=#{image1}, image2=#{image2}, image3=#{image3}
+  	WHERE EMAIL=#{email}
+  </update>
+  <delete id="delete" parameterType="string">
+  	DELETE FROM QNA WHERE EMAIL=#{value}
+  </delete>
+  
+</mapper>
